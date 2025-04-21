@@ -10,7 +10,7 @@ public class Subject implements Serializable {
 	public String getCd() {
 		return cd;
 	}
-	public void setCd(String no) {
+	public void setCd(String cd) {
 		this.cd = cd;
 	}
 	public String getName() {
