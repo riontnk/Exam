@@ -1,6 +1,7 @@
 package bean;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class TestListSubject implements Serializable {
 
