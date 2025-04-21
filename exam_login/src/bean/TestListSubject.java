@@ -12,35 +12,35 @@ public class TestListSubject implements Serializable {
 	private Map points;
 
 
-	public int getentYear(){
+	public int getEntYear(){
 		return entYear;
 	}
-	public String getstudentNo(){
+	public String getStudentNo(){
 		return studentNo;
 	}
-	public String getstudentName(){
+	public String getStudentName(){
 		return studentName;
 	}
-	public String getclassNum(){
+	public String getClassNum(){
 		return classNum;
 	}
-	public Map getpoints(){
+	public Map getPoints(){
 		return points;
 	}
 
-	public void setentYear(int entYear){
+	public void setEntYear(int entYear){
 		this.entYear = entYear;
 	}
-	public void setstudentNo(String studentNo){
+	public void setStudentNo(String studentNo){
 		this.studentNo = studentNo;
 	}
-	public void setstudentName(String studentName){
+	public void setStudentName(String studentName){
 		this.studentName = studentName;
 	}
-	public void setclassNum(String classNum){
+	public void setClassNum(String classNum){
 		this.classNum = classNum;
 	}
-	public void setpoints(Map points){
+	public void setPoints(Map points){
 		this.points = points;
 	}
 

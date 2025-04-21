@@ -14,38 +14,38 @@ public class Test implements Serializable {
 	public String getStudentNo(){
 		return studentNo;
 	}
-	public String getsubjectCd(){
+	public String getSubjectCd(){
 		return subjectCd;
 	}
-	public String getschoolCd(){
+	public String getSchoolCd(){
 		return schoolCd;
 	}
-	public int getno(){
+	public int getNo(){
 		return no;
 	}
-	public int getpoint(){
+	public int getPoint(){
 		return point;
 	}
-	public String getclassNum(){
+	public String getClassNum(){
 		return classNum;
 	}
 
 	public void setStudentNo(String studentNo){
 		this.studentNo = studentNo;
 	}
-	public void setsubjectCd(String subjectCd){
+	public void setSubjectCd(String subjectCd){
 		this.subjectCd = subjectCd;
 	}
-	public void setschoolCd(String schoolCd){
+	public void setSchoolCd(String schoolCd){
 		this.schoolCd = schoolCd;
 	}
-	public void setno(int no){
+	public void setNo(int no){
 		this.no = no;
 	}
-	public void setpoint(int point){
+	public void setPoint(int point){
 		this.point = point;
 	}
-	public void setclassNum(String classNum){
+	public void setClassNum(String classNum){
 		this.classNum = classNum;
 	}
 
