@@ -9,29 +9,29 @@ public class TestListStudent implements Serializable {
 	private int num;
 	private int point;
 
-	public String getsubjectName(){
+	public String getSubjectName(){
 		return subjectName;
 	}
-	public String getsubjectCd(){
+	public String getSubjectCd(){
 		return subjectCd;
 	}
-	public int getnum(){
+	public int getNum(){
 		return num;
 	}
-	public int getpoint(){
+	public int getPoint(){
 		return point;
 	}
 
-	public void setsubjectName(String subjectName){
+	public void setSubjectName(String subjectName){
 		this.subjectName = subjectName;
 	}
-	public void setsubjectCd(String subjectCd){
+	public void setSubjectCd(String subjectCd){
 		this.subjectCd = subjectCd;
 	}
-	public void setnum(int num){
+	public void setNum(int num){
 		this.num = num;
 	}
-	public void setpoint(int point){
+	public void setPoint(int point){
 		this.point = point;
 	}
 }
