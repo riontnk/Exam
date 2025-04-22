@@ -1,52 +1,58 @@
 package bean;
 
-import java.io.Serializable;
+public class Test {
+    private Student student;
+    private String classNum;
+    private Subject subject;
+    private School school;
+    private int no;
+    private int point;
 
-public class Test implements Serializable {
+    public Student getStudent() {
+        return student;
+    }
 
-	private String studentNo;
-	private String subjectCd;
-	private String schoolCd;
-	private int no;
-	private int point;
-	private String classNum;
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
-	public String getStudentNo(){
-		return studentNo;
-	}
-	public String getSubjectCd(){
-		return subjectCd;
-	}
-	public String getSchoolCd(){
-		return schoolCd;
-	}
-	public int getNo(){
-		return no;
-	}
-	public int getPoint(){
-		return point;
-	}
-	public String getClassNum(){
-		return classNum;
-	}
+    public String getClassNum() {
+        return classNum;
+    }
 
-	public void setStudentNo(String studentNo){
-		this.studentNo = studentNo;
-	}
-	public void setSubjectCd(String subjectCd){
-		this.subjectCd = subjectCd;
-	}
-	public void setSchoolCd(String schoolCd){
-		this.schoolCd = schoolCd;
-	}
-	public void setNo(int no){
-		this.no = no;
-	}
-	public void setPoint(int point){
-		this.point = point;
-	}
-	public void setClassNum(String classNum){
-		this.classNum = classNum;
-	}
+    public void setClassNum(String classNum) {
+        this.classNum = classNum;
+    }
 
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+
+    public School getSchool() {
+        return school;
+    }
+
+    public void setSchool(School school) {
+        this.school = school;
+    }
+
+    public int getNo() {
+        return no;
+    }
+
+    public void setNo(int no) {
+        this.no = no;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
+    }
 }
