@@ -25,7 +25,7 @@ public class TestRegistExecuteAction extends Action {
 		HttpSession session = req.getSession();
 		Teacher teacher = (Teacher) session.getAttribute("user");
 		School school = teacher.getSchool();
-		HashMap<String, String> errors = new HashMap<>();
+		HashMap<Integer, String> errors = new HashMap<>();
 		StudentDao studentDao = new StudentDao();
 		SubjectDao subjectDao = new SubjectDao();
 		TestDao testDao = new TestDao();
@@ -50,60 +50,62 @@ public class TestRegistExecuteAction extends Action {
 				try {
 					int point = Integer.parseInt(pointStr);
 					if (point < 0 || point > 100) {
-						errors.put(String.valueOf(i), "点数は0~100の範囲で入力してください: ");
+						errors.put(i, "点数は0~100の範囲で入力してください");
 					} else {
 						test.setPoint(point);
 						tests.add(test);
 					}
 				} catch (NumberFormatException e) {
-					errors.put(String.valueOf(i), "点数は0~100の範囲で入力してください: ");
+					errors.put(i, "点数は0~100の範囲で入力してください");
 				}
 			}
 			i++;
 		}
 		testDao.save(tests);
 		// エラーがある場合、元のフォームに戻る
+		// エラーがある場合、元のフォームに戻る
 		if (!errors.isEmpty()) {
-			ClassNumDao classNumDao = new ClassNumDao();
-			req.setAttribute("errors", errors); // エラー情報をセット
-			LocalDate todaysDate = LocalDate.now();
-			int year = todaysDate.getYear();
+		    ClassNumDao classNumDao = new ClassNumDao();
+		    req.setAttribute("errors", errors); // エラー情報をセット
+		    LocalDate todaysDate = LocalDate.now();
+		    int year = todaysDate.getYear();
 
-			// 検索フォームのパラメータを取得
-			String entYearStr = req.getParameter("f1");
-			String classNum = req.getParameter("f2");
-			String subjectCd = req.getParameter("f3");
-			String noStr = req.getParameter("f4");
+		    // 検索フォームのパラメータを取得
+		    String entYearStr = req.getParameter("f1");
+		    String classNum = req.getParameter("f2");
+		    String subjectCd = req.getParameter("f3");
+		    String noStr = req.getParameter("f4");
 
-			// 検索フォームのパラメータをリクエストに再セット
-			req.setAttribute("f1", entYearStr);
-			req.setAttribute("f2", classNum);
-			req.setAttribute("f3", subjectCd);
-			req.setAttribute("f4", noStr);
+		    // 検索フォームのパラメータをリクエストに再セット
+		    req.setAttribute("f1", entYearStr);
+		    req.setAttribute("f2", classNum);
+		    req.setAttribute("f3", subjectCd);
+		    req.setAttribute("f4", noStr);
+		    req.setAttribute("subjectCd", subjectCd);
 
-			// 必要に応じて検索結果も再取得
-			List<Student> students = null;
-			if (entYearStr != null && classNum != null && subjectCd != null && noStr != null) {
-				int entYear = Integer.parseInt(entYearStr);
-				int no = Integer.parseInt(noStr);
-				students = studentDao.filter(school, entYear, classNum, false);
-				req.setAttribute("students", students);
-				req.setAttribute("subject", subjectDao.get(subjectCd, school).getName());
-				req.setAttribute("no", no);
-			}
-			List<Integer> entYearSet = new ArrayList<>();
-			for (i=year - 10; i<year + 1; i++){
-				entYearSet.add(i);
-			}
+		    // 必要に応じて検索結果も再取得
+		    List<Student> students = null;
+		    if (entYearStr != null && classNum != null && subjectCd != null && noStr != null) {
+		        int entYear = Integer.parseInt(entYearStr);
+		        int no = Integer.parseInt(noStr);
+		        students = studentDao.filter(school, entYear, classNum, false);
+		        req.setAttribute("students", students);
+		        req.setAttribute("subject", subjectDao.get(subjectCd, school).getName());
+		        req.setAttribute("no", no);
+		    }
+		    List<Integer> entYearSet = new ArrayList<>();
+		    for (i=year - 10; i<year + 1; i++){
+		        entYearSet.add(i);
+		    }
 
-			// クラス番号や科目リストなども再セット
-			req.setAttribute("subjects", subjectDao.filter(school));
-			req.setAttribute("class_num_set", classNumDao.filter(school));
-			req.setAttribute("ent_year_set", entYearSet);
+		    // クラス番号や科目リストなども再セット
+		    req.setAttribute("subjects", subjectDao.filter(school));
+		    req.setAttribute("class_num_set", classNumDao.filter(school));
+		    req.setAttribute("ent_year_set", entYearSet);
 
-			// JSP にフォワード
-			req.getRequestDispatcher("test_regist.jsp").forward(req, res);
-			return;
+		    // JSP にフォワード
+		    req.getRequestDispatcher("test_regist.jsp").forward(req, res);
+		    return;
 		}
 
 		// 成功した場合は完了画面へ
