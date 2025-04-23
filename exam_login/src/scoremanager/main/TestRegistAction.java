@@ -2,9 +2,7 @@ package scoremanager.main;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +39,6 @@ public class TestRegistAction extends Action{
 		StudentDao sDao = new StudentDao();
 		ClassNumDao cNumDao = new ClassNumDao();
 		SubjectDao sbDao = new SubjectDao();
-		Map<String, String> errors = new HashMap<>();
 		classNums = cNumDao.filter(school);
 
 		entYearStr = req.getParameter("f1");
