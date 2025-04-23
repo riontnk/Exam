@@ -57,6 +57,11 @@
 			</form>
 			<c:if test="${students.size()>0}">
 				<form method="get" action="TestRegistExecute.action">
+					<!-- 検索パラメータを hidden フィールドとして保持 -->
+					<input type="hidden" name="f1" value="${f1}" />
+					<input type="hidden" name="f2" value="${f2}" />
+					<input type="hidden" name="f3" value="${f3}" />
+					<input type="hidden" name="f4" value="${f4}" />
 					<div>科目：${subject } (${no }回)</div>
 					<table class="table table-hover">
 						<tr>
