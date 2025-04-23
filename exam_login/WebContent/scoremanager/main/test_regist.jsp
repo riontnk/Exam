@@ -91,7 +91,7 @@
 								<td><input type="hidden"
 									name="students[${status.index}].name" value="${student.name}" />
 									${student.name}</td>
-								<td><input type="text" name="tests[${status.index}].point" />
+								<td><input type="text" name="tests[${status.index}].point" value="${points.get(status.index) }"/>
 									<c:if test="${errors.get(status.index) != null}">
 										<div class="mt-2 text-warning">${errors.get(status.index)}</div>
 									</c:if></td>
