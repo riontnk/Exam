@@ -63,47 +63,61 @@ public class TestRegistExecuteAction extends Action {
 		}
 		// エラーがある場合、元のフォームに戻る
 		if (!errors.isEmpty()) {
-		    ClassNumDao classNumDao = new ClassNumDao();
-		    req.setAttribute("errors", errors); // エラー情報をセット
-		    LocalDate todaysDate = LocalDate.now();
-		    int year = todaysDate.getYear();
+			ClassNumDao classNumDao = new ClassNumDao();
+			req.setAttribute("errors", errors); // エラー情報をセット
+			LocalDate todaysDate = LocalDate.now();
+			int year = todaysDate.getYear();
 
-		    // 検索フォームのパラメータを取得
-		    String entYearStr = req.getParameter("f1");
-		    String classNum = req.getParameter("f2");
-		    String subjectCd = req.getParameter("f3");
-		    String noStr = req.getParameter("f4");
+			// 検索フォームのパラメータを取得
+			String entYearStr = req.getParameter("f1");
+			String classNum = req.getParameter("f2");
+			String subjectCd = req.getParameter("f3");
+			String noStr = req.getParameter("f4");
+			HashMap<Integer, String> points = new HashMap<>();
 
-		    // 検索フォームのパラメータをリクエストに再セット
-		    req.setAttribute("f1", entYearStr);
-		    req.setAttribute("f2", classNum);
-		    req.setAttribute("f3", subjectCd);
-		    req.setAttribute("f4", noStr);
-		    req.setAttribute("subjectCd", subjectCd);
+			int j = 0;
+			while (true) {
+				if (req.getParameter("students[" + j + "].entYear") == null) {
+					break;
+				}
+				String pointStr = req.getParameter("tests[" + j + "].point");
+				if (pointStr != null) {
+					points.put(j, pointStr); // 文字列をそのまま保存
+				}
+				j++;
+			}
 
-		    // 必要に応じて検索結果も再取得
-		    List<Student> students = null;
-		    if (entYearStr != null && classNum != null && subjectCd != null && noStr != null) {
-		        int entYear = Integer.parseInt(entYearStr);
-		        int no = Integer.parseInt(noStr);
-		        students = studentDao.filter(school, entYear, classNum, false);
-		        req.setAttribute("students", students);
-		        req.setAttribute("subject", subjectDao.get(subjectCd, school).getName());
-		        req.setAttribute("no", no);
-		    }
-		    List<Integer> entYearSet = new ArrayList<>();
-		    for (i=year - 10; i<year + 1; i++){
-		        entYearSet.add(i);
-		    }
+			// 検索フォームのパラメータをリクエストに再セット
+			req.setAttribute("f1", entYearStr);
+			req.setAttribute("f2", classNum);
+			req.setAttribute("f3", subjectCd);
+			req.setAttribute("f4", noStr);
+			req.setAttribute("subjectCd", subjectCd);
 
-		    // クラス番号や科目リストなども再セット
-		    req.setAttribute("subjects", subjectDao.filter(school));
-		    req.setAttribute("class_num_set", classNumDao.filter(school));
-		    req.setAttribute("ent_year_set", entYearSet);
+			// 必要に応じて検索結果も再取得
+			List<Student> students = null;
+			if (entYearStr != null && classNum != null && subjectCd != null && noStr != null) {
+				int entYear = Integer.parseInt(entYearStr);
+				int no = Integer.parseInt(noStr);
+				students = studentDao.filter(school, entYear, classNum, false);
+				req.setAttribute("students", students);
+				req.setAttribute("subject", subjectDao.get(subjectCd, school).getName());
+				req.setAttribute("no", no);
+			}
+			List<Integer> entYearSet = new ArrayList<>();
+			for (i = year - 10; i < year + 1; i++) {
+				entYearSet.add(i);
+			}
 
-		    // JSP にフォワード
-		    req.getRequestDispatcher("test_regist.jsp").forward(req, res);
-		    return;
+			// クラス番号や科目リストなども再セット
+			req.setAttribute("subjects", subjectDao.filter(school));
+			req.setAttribute("class_num_set", classNumDao.filter(school));
+			req.setAttribute("ent_year_set", entYearSet);
+			req.setAttribute("points", points);
+
+			// JSP にフォワード
+			req.getRequestDispatcher("test_regist.jsp").forward(req, res);
+			return;
 		}
 		testDao.save(tests);
 
