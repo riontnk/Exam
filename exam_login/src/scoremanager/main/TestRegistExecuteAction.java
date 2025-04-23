@@ -36,13 +36,9 @@ public class TestRegistExecuteAction extends Action {
 			if (req.getParameter("students[" + i + "].entYear") == null) {
 				break;
 			}
-			System.out.println(req.getParameter("students[" + i + "].no"));
-			System.out.println(req.getParameter("tests[" + i + "].subjectCd"));
-			System.out.println(req.getParameter("tests[" + i + "].no"));
 			Student student = studentDao.get(req.getParameter("students[" + i + "].no"));
 			String classNum = req.getParameter("students[" + i + "].classNum");
 			Subject subject = subjectDao.get(req.getParameter("tests[" + i + "].subjectCd"), school);
-			System.out.println(req.getParameter("tests[" + i + "].no"));
 			int no = Integer.parseInt(req.getParameter("tests[" + i + "].no"));
 			String pointStr = req.getParameter("tests[" + i + "].point");
 			test.setStudent(student);
@@ -51,76 +47,64 @@ public class TestRegistExecuteAction extends Action {
 			test.setSchool(school);
 			test.setNo(no);
 			if (pointStr != null) {
-				int point = Integer.parseInt(pointStr);
-				test.setPoint(point);
-				tests.add(test);
+				try {
+					int point = Integer.parseInt(pointStr);
+					if (point < 0 || point > 100) {
+						errors.put(String.valueOf(i), "点数は0~100の範囲で入力してください: ");
+					} else {
+						test.setPoint(point);
+						tests.add(test);
+					}
+				} catch (NumberFormatException e) {
+					errors.put(String.valueOf(i), "点数は0~100の範囲で入力してください: ");
+				}
 			}
 			i++;
 		}
 		testDao.save(tests);
 		// エラーがある場合、元のフォームに戻る
 		if (!errors.isEmpty()) {
-			String entYearStr = "";
-			String classNum = "";
-			String subjectCd = "";
-			String noStr = "";
-			int entYear = 0;
-			int no = 0;
-			List<Student> students = null;
-			List<Subject> subjects = null;
-			List<String> classNums = null;
+			ClassNumDao classNumDao = new ClassNumDao();
+			req.setAttribute("errors", errors); // エラー情報をセット
 			LocalDate todaysDate = LocalDate.now();
 			int year = todaysDate.getYear();
-			StudentDao sDao = new StudentDao();
-			ClassNumDao cNumDao = new ClassNumDao();
-			SubjectDao sbDao = new SubjectDao();
-			classNums = cNumDao.filter(school);
 
-			entYearStr = req.getParameter("f1");
-			classNum = req.getParameter("f2");
-			subjectCd = req.getParameter("f3");
-			noStr = req.getParameter("f4");
-			subjects = sbDao.filter(school);
-			if (noStr != null) {
-				no = Integer.parseInt(noStr);
-			}
-			if (entYearStr != null) {
-				entYear = Integer.parseInt(entYearStr);
-			}
-			if (entYearStr != null && classNum != null && subjectCd != null && noStr != null) {
-				students = sDao.filter(school, entYear, classNum, false);
-				req.setAttribute("students", students);
-				req.setAttribute("subject", sbDao.get(subjectCd, school).getName());
-				req.setAttribute("no", no);
-			}
-			List<Integer> entYearSet = new ArrayList<>();
-			for (i = year - 10; i < year + 1; i++) {
-				entYearSet.add(i);
-			}
+			// 検索フォームのパラメータを取得
+			String entYearStr = req.getParameter("f1");
+			String classNum = req.getParameter("f2");
+			String subjectCd = req.getParameter("f3");
+			String noStr = req.getParameter("f4");
 
+			// 検索フォームのパラメータをリクエストに再セット
 			req.setAttribute("f1", entYearStr);
 			req.setAttribute("f2", classNum);
 			req.setAttribute("f3", subjectCd);
 			req.setAttribute("f4", noStr);
 
-			req.setAttribute("subjects", subjects);
+			// 必要に応じて検索結果も再取得
+			List<Student> students = null;
+			if (entYearStr != null && classNum != null && subjectCd != null && noStr != null) {
+				int entYear = Integer.parseInt(entYearStr);
+				int no = Integer.parseInt(noStr);
+				students = studentDao.filter(school, entYear, classNum, false);
+				req.setAttribute("students", students);
+				req.setAttribute("subject", subjectDao.get(subjectCd, school).getName());
+				req.setAttribute("no", no);
+			}
+			List<Integer> entYearSet = new ArrayList<>();
+			for (i=year - 10; i<year + 1; i++){
+				entYearSet.add(i);
+			}
+
+			// クラス番号や科目リストなども再セット
+			req.setAttribute("subjects", subjectDao.filter(school));
+			req.setAttribute("class_num_set", classNumDao.filter(school));
 			req.setAttribute("ent_year_set", entYearSet);
-			req.setAttribute("class_num_set", classNums);
+
+			// JSP にフォワード
 			req.getRequestDispatcher("test_regist.jsp").forward(req, res);
 			return;
 		}
-
-		// エラーがない場合は登録処理を実行
-		Student student = new Student();
-
-		// student.setNo(no);
-		// student.setName(name);
-		// student.setEntYear(entYear);
-		// student.setClassNum(classNum);
-		// student.setAttend(false);
-		// student.setSchool(school);
-		//
-		// studentDao.save(student);
 
 		// 成功した場合は完了画面へ
 		req.getRequestDispatcher("test_regist_done.jsp").forward(req, res);

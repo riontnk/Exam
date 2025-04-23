@@ -47,7 +47,6 @@ public class StudentListAction extends Action{
 		}
 
 		List<String> list = cNumDao.filter(teacher.getSchool());
-		System.out.println(list); //debug
 		if (isAttendStr != null){
 			isAttend = true;
 			req.setAttribute("f3", isAttendStr);
