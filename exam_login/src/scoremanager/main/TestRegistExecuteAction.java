@@ -50,19 +50,17 @@ public class TestRegistExecuteAction extends Action {
 				try {
 					int point = Integer.parseInt(pointStr);
 					if (point < 0 || point > 100) {
-						errors.put(i, "点数は0~100の範囲で入力してください");
+						errors.put(i, "0~100の範囲で入力してください");
 					} else {
 						test.setPoint(point);
 						tests.add(test);
 					}
 				} catch (NumberFormatException e) {
-					errors.put(i, "点数は0~100の範囲で入力してください");
+					errors.put(i, "0~100の範囲で入力してください");
 				}
 			}
 			i++;
 		}
-		testDao.save(tests);
-		// エラーがある場合、元のフォームに戻る
 		// エラーがある場合、元のフォームに戻る
 		if (!errors.isEmpty()) {
 		    ClassNumDao classNumDao = new ClassNumDao();
@@ -107,6 +105,7 @@ public class TestRegistExecuteAction extends Action {
 		    req.getRequestDispatcher("test_regist.jsp").forward(req, res);
 		    return;
 		}
+		testDao.save(tests);
 
 		// 成功した場合は完了画面へ
 		req.getRequestDispatcher("test_regist_done.jsp").forward(req, res);
