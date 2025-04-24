@@ -85,7 +85,6 @@ public class TestDao extends Dao {
 			SubjectDao subjectDao = new SubjectDao();
 			SchoolDao schoolDao = new SchoolDao();
 
-
 			try (ResultSet rSet = statement.executeQuery()) {
 				if (rSet.next()) {
 					test = new Test();
@@ -104,13 +103,16 @@ public class TestDao extends Dao {
 	}
 
 	private boolean save(Test test, Connection connection) throws Exception {
-	    PreparedStatement statement = null;
+		PreparedStatement statement = null;
+		int count = 0;
+		if (connection == null) {
+			System.out.println("print");
+		}
 
 		try {
 			Test old = get(test.getStudent(), test.getSubject(), test.getSchool(), test.getNo());
 			if (old == null) {
-				statement = connection.prepareStatement(
-						"insert into test values(?, ?, ?, ?, ?, ?)");
+				statement = connection.prepareStatement("insert into test values(?, ?, ?, ?, ?, ?)");
 				statement.setString(1, test.getStudent().getNo());
 				statement.setString(2, test.getSubject().getCd());
 				statement.setString(3, test.getSchool().getCd());
@@ -119,7 +121,7 @@ public class TestDao extends Dao {
 				statement.setString(6, test.getClassNum());
 			} else {
 				statement = connection.prepareStatement(
-		                "UPDATE test SET point=? WHERE student_no=? AND subject_cd=? AND school_cd=? AND no=?");
+						"UPDATE test SET point=? WHERE student_no=? AND subject_cd=? AND school_cd=? AND no=?");
 				statement.setInt(1, test.getPoint());
 				statement.setString(2, test.getStudent().getNo());
 				statement.setString(3, test.getSubject().getCd());
@@ -127,31 +129,29 @@ public class TestDao extends Dao {
 				statement.setInt(5, test.getNo());
 
 			}
-			} catch (Exception e) {
-	        // 例外が発生した場合は再スロー
-				throw e;
-			} finally {
-	        // PreparedStatementをクローズ
-				if (statement != null) {
-					try {
-						statement.close();
-					} catch (SQLException sqle) {
-						throw sqle;
-					}
+			count = statement.executeUpdate();
+		} catch (Exception e) {
+			// 例外が発生した場合は再スロー
+			throw e;
+		} finally {
+			// PreparedStatementをクローズ
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException sqle) {
+					throw sqle;
 				}
-	        // Connectionをクローズ
-				if (connection != null) {
-					try {
-						connection.close();
-					} catch (SQLException sqle) {
-						throw sqle;
-	            }
-	        }
-	    }
-				return statement.executeUpdate() == 1;
-
+			}
+		}
+		if (count > 0) {
+			// 実行件数が1件以上ある場合
+			return true;
+		} else {
+			// 実行件数が0件の場合
+			return false;
 		}
 
+	}
 
 	// 単一 Test レコードを保存
 	public boolean save(List<Test> list) throws Exception {
@@ -159,6 +159,14 @@ public class TestDao extends Dao {
 		try (Connection connection = getConnection();) {
 			for (Test t : list) {
 				save(t, connection);
+			}
+			// Connectionをクローズ
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException sqle) {
+					throw sqle;
+				}
 			}
 			return true;
 		} catch (SQLException sqle) {
