@@ -91,8 +91,8 @@
 							<th>クラス</th>
 							<th>学生番号</th>
 							<th>氏名</th>
-							<th>一回</th>
-							<th>二回</th>
+							<th>1回</th>
+							<th>2回</th>
 						</tr>
 						<c:forEach var="student" varStatus="status" items="${students}">
 							<tr>
