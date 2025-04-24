@@ -104,16 +104,54 @@ public class TestDao extends Dao {
 	}
 
 	private boolean save(Test test, Connection connection) throws Exception {
-		try (PreparedStatement statement = connection.prepareStatement("insert into test values(?, ?, ?, ?, ?, ?)")) {
-			statement.setString(1, test.getStudent().getNo());
-			statement.setString(2, test.getSubject().getCd());
-			statement.setString(3, test.getSchool().getCd());
-			statement.setInt(4, test.getNo());
-			statement.setInt(5, test.getPoint());
-			statement.setString(6, test.getClassNum());
-			return statement.executeUpdate() == 1;
+	    PreparedStatement statement = null;
+
+		try {
+			Test old = get(test.getStudent(), test.getSubject(), test.getSchool(), test.getNo());
+			if (old == null) {
+				statement = connection.prepareStatement(
+						"insert into test values(?, ?, ?, ?, ?, ?)");
+				statement.setString(1, test.getStudent().getNo());
+				statement.setString(2, test.getSubject().getCd());
+				statement.setString(3, test.getSchool().getCd());
+				statement.setInt(4, test.getNo());
+				statement.setInt(5, test.getPoint());
+				statement.setString(6, test.getClassNum());
+			} else {
+				statement = connection.prepareStatement(
+		                "UPDATE test SET point=? WHERE student_no=? AND subject_cd=? AND school_cd=? AND no=?");
+				statement.setInt(1, test.getPoint());
+				statement.setString(2, test.getStudent().getNo());
+				statement.setString(3, test.getSubject().getCd());
+				statement.setString(4, test.getSchool().getCd());
+				statement.setInt(5, test.getNo());
+
+			}
+			} catch (Exception e) {
+	        // 例外が発生した場合は再スロー
+				throw e;
+			} finally {
+	        // PreparedStatementをクローズ
+				if (statement != null) {
+					try {
+						statement.close();
+					} catch (SQLException sqle) {
+						throw sqle;
+					}
+				}
+	        // Connectionをクローズ
+				if (connection != null) {
+					try {
+						connection.close();
+					} catch (SQLException sqle) {
+						throw sqle;
+	            }
+	        }
+	    }
+				return statement.executeUpdate() == 1;
+
 		}
-	}
+
 
 	// 単一 Test レコードを保存
 	public boolean save(List<Test> list) throws Exception {
