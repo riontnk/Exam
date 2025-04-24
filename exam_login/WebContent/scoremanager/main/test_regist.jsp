@@ -53,15 +53,16 @@
 					<div class="col-2 text-center">
 						<button class="btn btn-secondary" id="filter-button">検索</button>
 					</div>
+					<div class="mt-2 text-warning">${error}</div>
 				</div>
 			</form>
 			<c:if test="${students.size()>0}">
 				<form method="get" action="TestRegistExecute.action">
 					<!-- 検索パラメータを hidden フィールドとして保持 -->
-					<input type="hidden" name="f1" value="${f1}" />
-					<input type="hidden" name="f2" value="${f2}" />
-					<input type="hidden" name="f3" value="${f3}" />
-					<input type="hidden" name="f4" value="${f4}" />
+					<input type="hidden" name="f1" value="${f1}" /> <input
+						type="hidden" name="f2" value="${f2}" /> <input type="hidden"
+						name="f3" value="${f3}" /> <input type="hidden" name="f4"
+						value="${f4}" />
 
 					<div>科目：${subject } (${no }回)</div>
 					<table class="table table-hover">
@@ -92,8 +93,9 @@
 								<td><input type="hidden"
 									name="students[${status.index}].name" value="${student.name}" />
 									${student.name}</td>
-								<td><input type="text" name="tests[${status.index}].point" value="${points.get(status.index) }"/>
-									<c:if test="${errors.get(status.index) != null}">
+								<td><input type="text" name="tests[${status.index}].point"
+									value="${points.get(status.index) }" /> <c:if
+										test="${errors.get(status.index) != null}">
 										<div class="mt-2 text-warning">${errors.get(status.index)}</div>
 									</c:if></td>
 							</tr>
