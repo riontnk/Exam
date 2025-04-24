@@ -58,7 +58,10 @@ public class TestRegistAction extends Action {
 		if (entYearStr != null) {
 			entYear = Integer.parseInt(entYearStr);
 		}
-		if (entYearStr != null && classNum != null && subjectCd != null && noStr != null) {
+		if ("0".equals(entYearStr) || "0".equals(classNum) || "0".equals(subjectCd) || "0".equals(noStr)) {
+		    req.setAttribute("error", "入学年度とクラスと科目と回数を選択してください");
+		}
+		else if(entYearStr != null && classNum != null && subjectCd != null && noStr != null) {
 			students = sDao.filter(school, entYear, classNum, false);
 			req.setAttribute("students", students);
 			req.setAttribute("subject", sbDao.get(subjectCd, school).getName());
