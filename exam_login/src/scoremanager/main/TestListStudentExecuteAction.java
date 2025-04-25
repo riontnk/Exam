@@ -43,6 +43,7 @@ public class TestListStudentExecuteAction extends Action {
 	        student = sDao.get(studentNo);
 	        if (student != null) {
 		        tls = tlsDao.filter(student);
+		        req.setAttribute("student", student);
 	        }
 
 	        List<Integer> entYearSet = new ArrayList<>();
