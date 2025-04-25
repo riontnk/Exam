@@ -83,7 +83,7 @@
 
 			<!-- 結果 -->
 			<c:choose>
-				<c:when test="${students.size()>0}">
+				<c:when test="${tlsList.size()>0}">
 					<div>科目：${subjectName }</div>
 					<table class="table table-hover">
 						<tr>
@@ -94,20 +94,20 @@
 							<th>1回</th>
 							<th>2回</th>
 						</tr>
-						<c:forEach var="student" varStatus="status" items="${students}">
+						<c:forEach var="tls" varStatus="status" items="${tlsList}">
 							<tr>
-								<td>${student.entYear}</td>
-								<td>${student.classNum}</td>
-								<td>${student.no}</td>
-								<td>${student.name}</td>
-								<td>${points1.get(status.index) != null ? points1.get(status.index) : '-'}</td>
-								<td>${points2.get(status.index) != null ? points2.get(status.index) : '-'}</td>
+								<td>${tls.entYear}</td>
+								<td>${tls.classNum}</td>
+								<td>${tls.studentNo}</td>
+								<td>${tls.studentName}</td>
+								<td>${tls.getPoint(1) != null ? tls.getPoint(1) : '-'}</td>
+								<td>${tls.getPoint(2) != null ? tls.getPoint(2) : '-'}</td>
 							</tr>
 						</c:forEach>
 					</table>
 				</c:when>
 				<c:otherwise>
-					<div style="color: skyblue; font-size: 0.85rem; font-weight: 800;">科目情報または学生情報を入力して検索ボタンをクリックしてください</div>
+					<div>成績情報が存在しませんでした</div>
 				</c:otherwise>
 			</c:choose>
 		</section>

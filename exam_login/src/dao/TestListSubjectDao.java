@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import bean.School;
 import bean.Subject;
@@ -17,35 +16,38 @@ public class TestListSubjectDao extends Dao {
     private String baseSql = "SELECT * FROM test WHERE subject_cd=?";
 
     // ResultSet から TestListSubject リストを生成
-    private List<TestListSubject> postFilter(ResultSet rSet) throws SQLException {
+    private List<TestListSubject> postFilter(ResultSet rSet) throws Exception {
         List<TestListSubject> list = new ArrayList<>(); // 結果を格納するリストを初期化
+        StudentDao sDao = new StudentDao();
 
         while (rSet.next()) {
-            boolean flag = true;
+            String studentNo = rSet.getString("student_no");
+            boolean exists = false;
+
             for (TestListSubject tls : list) {
-            	if (tls.getStudentNo() == rSet.getString("student_no")) {
-            		Map<Integer, Integer> points = tls.getPoints();
-            		points.put(Integer.parseInt(rSet.getString("no")), rSet.getInt("point"));
-            		tls.setPoints(points);
-            		flag = false;
-            		break;
-            	}
+                if (tls.getStudentNo().equals(studentNo)) { // 学生番号が一致する場合
+                    tls.putPoint(Integer.parseInt(rSet.getString("no")), rSet.getInt("point")); // putPoint を使用
+                    exists = true;
+                    break;
+                }
             }
-            if (flag) {
+
+            if (!exists) { // 初めての学生番号の場合
                 TestListSubject testlistsubject = new TestListSubject();
-                // TestListSubject にデータをセット
-                testlistsubject.setStudentNo(rSet.getString("student_no")); // 学生番号
-                testlistsubject.setStudentName(rSet.getString("student_name")); // 学生名
+                testlistsubject.setStudentNo(studentNo); // 学生番号
+                testlistsubject.setStudentName(sDao.get(studentNo).getName()); // 学生名
                 testlistsubject.setClassNum(rSet.getString("class_num")); // クラス番号
-                testlistsubject.setEntYear(rSet.getInt("ent_ear")); // 入学年度
-                list.add(testlistsubject);
+                testlistsubject.setEntYear(sDao.get(studentNo).getEntYear()); // 入学年度
+                testlistsubject.putPoint(Integer.parseInt(rSet.getString("no")), rSet.getInt("point")); // 初回の得点を追加
+                list.add(testlistsubject); // リストに追加
             }
         }
 
         return list; // 結果リストを返却
     }
-    public List<TestListSubject> filter(int entYear, String classNum, Subject subject, School school)throws Exception{
-    	// 結果を格納するリストを初期化
+
+    public List<TestListSubject> filter(int entYear, String classNum, Subject subject, School school) throws Exception {
+        // 結果を格納するリストを初期化
         List<TestListSubject> testListSubject = new ArrayList<>();
         Connection connection = getConnection(); // データベース接続を取得
         PreparedStatement statement = null;
