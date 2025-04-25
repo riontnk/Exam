@@ -9,15 +9,17 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import bean.School;
+import bean.Student;
 import bean.Subject;
 import bean.Teacher;
-import bean.TestListSubject;
+import bean.TestListStudent;
 import dao.ClassNumDao;
+import dao.StudentDao;
 import dao.SubjectDao;
-import dao.TestListSubjectDao;
+import dao.TestListStudentDao;
 import tool.Action;
 
-public class TestListSubjectExecuteAction extends Action {
+public class TestListStudentExecuteAction extends Action {
 
 		public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
 			HttpSession session = req.getSession();
@@ -25,22 +27,21 @@ public class TestListSubjectExecuteAction extends Action {
 
 			School school = teacher.getSchool();
 
-			String entYearStr = "";
-			String classNum = "";
-			String subjectCd = "";
+			String studentNo = "";
 			int entYear = 0;
-
-			List<TestListSubject> tls = null;
-
+			List<TestListStudent> tls = null;
+			Student student = null;
+			TestListStudentDao tlsDao = new TestListStudentDao();
 			SubjectDao sbDao = new SubjectDao();
-			TestListSubjectDao tlsDao = new TestListSubjectDao();
 	        LocalDate todayDate = LocalDate.now();
 	        int year = todayDate.getYear();
-
+	        StudentDao sDao = new StudentDao();
 	        ClassNumDao cNumDao = new ClassNumDao();
 	        SubjectDao subjectDao = new SubjectDao();
+			studentNo = req.getParameter("f4");
 
-
+	        student = sDao.get(studentNo);
+	        tls = tlsDao.filter(student);
 	        List<Integer> entYearSet = new ArrayList<>();
 	        for (int i = year - 10; i <= year; i++) {
 	            entYearSet.add(i);
@@ -50,34 +51,14 @@ public class TestListSubjectExecuteAction extends Action {
 	        List<String> classNumSet = cNumDao.filter(teacher.getSchool());
 
 
-
 	        List<Subject> subjectSet = subjectDao.filter(teacher.getSchool());
-			entYearStr = req.getParameter("f1");
-			classNum = req.getParameter("f2");
-			subjectCd = req.getParameter("f3");
 
-
-	        Subject subject = null;
-	        subject = sbDao.get(subjectCd, school);
-
-
-			if (entYearStr != null && classNum != null && subjectCd != null) {
-				entYear = Integer.parseInt(entYearStr);
-				tls = tlsDao.filter(entYear, classNum, subject, school);
-
-			}
-			String subjectName = sbDao.get(subjectCd, school).getName();
-
-			req.setAttribute("f1", entYearStr);
-			req.setAttribute("f2", classNum);
-			req.setAttribute("f3", subjectCd);
-			req.setAttribute("subjectName", subjectName);
-			req.setAttribute("tls", tls);
-
+			req.setAttribute("f4", studentNo);
 	        req.setAttribute("ent_year_set", entYearSet);
 	        req.setAttribute("class_num_set", classNumSet);
+	        req.setAttribute("tls", tls);
 	        req.setAttribute("subject_set", subjectSet);
 
-			req.getRequestDispatcher("test_list_subject.jsp").forward(req, res);
+			req.getRequestDispatcher("test_list_student.jsp").forward(req, res);
 		}
 	}
