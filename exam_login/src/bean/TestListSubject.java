@@ -9,7 +9,7 @@ public class TestListSubject implements Serializable {
 	private String studentNo;
 	private String studentName;
 	private String classNum;
-	private Map points;
+	private Map<Integer, Integer> points;
 
 
 	public int getEntYear(){
@@ -24,7 +24,7 @@ public class TestListSubject implements Serializable {
 	public String getClassNum(){
 		return classNum;
 	}
-	public Map getPoints(){
+	public Map<Integer, Integer> getPoints(){
 		return points;
 	}
 
@@ -40,7 +40,7 @@ public class TestListSubject implements Serializable {
 	public void setClassNum(String classNum){
 		this.classNum = classNum;
 	}
-	public void setPoints(Map points){
+	public void setPoints(Map<Integer, Integer> points){
 		this.points = points;
 	}
 

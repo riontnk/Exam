@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,25 +21,25 @@ public class TestListSubjectDao extends Dao {
         List<TestListSubject> list = new ArrayList<>(); // 結果を格納するリストを初期化
 
         while (rSet.next()) {
-            TestListSubject testlistsubject = new TestListSubject();
-            Subject subject = new Subject();
-            SubjectDao subjectDao = new SubjectDao();
-            School school = new School();
-            SchoolDao schoolDao = new SchoolDao();
-
-            // TestListSubject にデータをセット
-            testlistsubject.setStudentNo(rSet.getString("student_no")); // 学生番号
-            testlistsubject.setStudentName(rSet.getString("student_name")); // 学生名
-            testlistsubject.setClassNum(rSet.getString("class_num")); // クラス番号
-            testlistsubject.setEntYear(rSet.getInt("ent_year")); // 入学年度
-
-            // Test の結果を Map としてセット
-            Map<String, Integer> points = new HashMap<>();
-            points.put("point", rSet.getInt("point")); // 点数を "point" キーに保存
-            testlistsubject.setPoints(points);
-
-            // リストに追加
-            list.add(testlistsubject);
+            boolean flag = true;
+            for (TestListSubject tls : list) {
+            	if (tls.getStudentNo() == rSet.getString("student_no")) {
+            		Map<Integer, Integer> points = tls.getPoints();
+            		points.put(Integer.parseInt(rSet.getString("no")), rSet.getInt("point"));
+            		tls.setPoints(points);
+            		flag = false;
+            		break;
+            	}
+            }
+            if (flag) {
+                TestListSubject testlistsubject = new TestListSubject();
+                // TestListSubject にデータをセット
+                testlistsubject.setStudentNo(rSet.getString("student_no")); // 学生番号
+                testlistsubject.setStudentName(rSet.getString("student_name")); // 学生名
+                testlistsubject.setClassNum(rSet.getString("class_num")); // クラス番号
+                testlistsubject.setEntYear(rSet.getInt("ent_ear")); // 入学年度
+                list.add(testlistsubject);
+            }
         }
 
         return list; // 結果リストを返却
