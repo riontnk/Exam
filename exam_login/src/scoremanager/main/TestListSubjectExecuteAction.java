@@ -72,7 +72,7 @@ public class TestListSubjectExecuteAction extends Action {
 			req.setAttribute("f2", classNum);
 			req.setAttribute("f3", subjectCd);
 			req.setAttribute("subjectName", subjectName);
-			req.setAttribute("tls", tls);
+			req.setAttribute("tlsList", tls);
 
 	        req.setAttribute("ent_year_set", entYearSet);
 	        req.setAttribute("class_num_set", classNumSet);
