@@ -41,13 +41,15 @@ public class TestListStudentExecuteAction extends Action {
 			studentNo = req.getParameter("f4");
 
 	        student = sDao.get(studentNo);
-	        tls = tlsDao.filter(student);
+	        if (student != null) {
+		        tls = tlsDao.filter(student);
+		        req.setAttribute("student", student);
+	        }
+
 	        List<Integer> entYearSet = new ArrayList<>();
 	        for (int i = year - 10; i <= year; i++) {
 	            entYearSet.add(i);
 	        }
-
-
 	        List<String> classNumSet = cNumDao.filter(teacher.getSchool());
 
 

@@ -84,7 +84,7 @@
 			<!-- 結果 -->
 			<c:choose>
 				<c:when test="${tls.size()>0}">
-					<div>科目：${subjectName }</div>
+					<div>氏名：${student.name }(${student.no })</div>
 					<table class="table table-hover">
 						<tr>
 							<th>科目名</th>

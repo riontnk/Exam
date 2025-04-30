@@ -45,7 +45,7 @@
 								<option value="0">--------</option>
 								<c:forEach var="subject" items="${subject_set}">
 									<option value="${subject.getCd()}"
-										<c:if test="${subject.getCd()==selected_subject}">selected</c:if>>${subject.getName()}</option>
+										<c:if test="${subject.getCd()==f3}">selected</c:if>>${subject.getName()}</option>
 								</c:forEach>
 							</select>
 						</div>
@@ -80,7 +80,36 @@
 					</div>
 				</form>
 			</div>
-			<label style="color: skyblue;">科目情報を選択または学生情報を入力して検索ボタンをクリックしてください</label>
+
+			<!-- 結果 -->
+			<c:choose>
+				<c:when test="${tlsList.size()>0}">
+					<div>科目：${subjectName }</div>
+					<table class="table table-hover">
+						<tr>
+							<th>入学年度</th>
+							<th>クラス</th>
+							<th>学生番号</th>
+							<th>氏名</th>
+							<th>1回</th>
+							<th>2回</th>
+						</tr>
+						<c:forEach var="tls" varStatus="status" items="${tlsList}">
+							<tr>
+								<td>${tls.entYear}</td>
+								<td>${tls.classNum}</td>
+								<td>${tls.studentNo}</td>
+								<td>${tls.studentName}</td>
+								<td>${tls.getPoint(1) != null ? tls.getPoint(1) : '-'}</td>
+								<td>${tls.getPoint(2) != null ? tls.getPoint(2) : '-'}</td>
+							</tr>
+						</c:forEach>
+					</table>
+				</c:when>
+				<c:otherwise>
+					<div>成績情報が存在しませんでした</div>
+				</c:otherwise>
+			</c:choose>
 		</section>
 	</c:param>
 </c:import>
