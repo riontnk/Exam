@@ -55,16 +55,15 @@ public class StudentListAction extends Action{
 		if (entYear != 0 && !classNum.equals("0")){
 			students = sDao.filter(teacher.getSchool(), entYear, classNum, isAttend);
 		} else if (entYear != 0 && classNum.equals("0")){
-			students = sDao.filter(teacher.getSchool(), isAttend);
+			students = sDao.filter(teacher.getSchool(), entYear, isAttend);
 		}else if (entYear == 0 && classNum == null || entYear == 0 && classNum.equals("0")){
 			students = sDao.filter(teacher.getSchool(),isAttend);
 		}else {
 			errors.put("f1", "クラスを指定する場合は入学年度も指定してください");
-			students =sDao.filter(teacher.getSchool(), isAttend);
 		}
 		req.setAttribute("f1", entYear);
 		req.setAttribute("f2", classNum);
-
+		req.setAttribute("errors", errors);
 		req.setAttribute("students", students);
 		req.setAttribute("class_num_set", list);
 		req.setAttribute("ent_year_set", entYearSet);

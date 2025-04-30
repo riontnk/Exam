@@ -80,6 +80,43 @@ public class StudentDao extends Dao {
 		return list;
 	}
 
+	public List<Student> filter(School school, int entYear, boolean isAttend) throws Exception {
+		List<Student> list = new ArrayList<>();
+		Connection connection = getConnection();
+		PreparedStatement statement = null;
+		ResultSet rSet = null;
+		String order = " order by no asc";
+		String condition = "and ent_year=?";
+		String conditionIsAttend = "";
+		if (isAttend) {
+			conditionIsAttend = "and is_attend=true";
+		}
+		try {
+			statement = connection.prepareStatement(baseSql + condition + conditionIsAttend + order);
+			statement.setString(1, school.getCd());
+			statement.setInt(2, entYear);
+			rSet = statement.executeQuery();
+			list = postFilter(rSet, school);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException sqle) {
+					throw sqle;
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException sqle) {
+					throw sqle;
+				}
+			}
+		}
+		return list;
+	}
 	public List<Student> filter(School school, boolean isAttend) throws Exception {
 		List<Student> list = new ArrayList<>();
 		Connection connection = getConnection();
