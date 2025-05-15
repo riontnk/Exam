@@ -39,7 +39,7 @@ public class StudentCreateExecuteAction extends Action {
             StudentDao studentDao = new StudentDao();
             Student existingStudent = studentDao.get(no);
             if (existingStudent != null) {
-                errors.put("no", "この学生番号は既に使用されています");
+                errors.put("no", "学生番号が重複しています");
             }
         }
 
